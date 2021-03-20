@@ -131,7 +131,6 @@ void setup()
 	RTCtime = RTC.getTime();
 	ResetTime(false, 17, 05, 20, 17, 12, 2020, 4);			//Daten Eingeben und auf true stellen um die Uhr zu stellen
 	ResetHour(false, 17);									              //Stunden eingeben und fertig!
-
 }
 
 
@@ -145,28 +144,267 @@ void loop()
         }
     //changing Time via mobile
         if(stringInput == "setTime"){
-          HC06.println("Hour:");
-          int i = 0;
+      //change hours
+          HC06.println("hour:");
+        //wait for input
+          int h = 0;
           oldstringInput = stringInput;
-          while(oldstringInput == stringInput && i < 100){
-            Serial.println(i);
+          while(oldstringInput == stringInput && h < 100){
+            Serial.println(h);
             getInput();
             delay(100);
-            i++;
+            h++;
           }
           Serial.println(stringInput.toInt());
-          if(i == 100){
+        //check if a valid number or no number
+          if(h == 100){
             HC06.println("took to long");
-            i = 0;
+            h = 0;
             return;
           }else if(stringInput.toInt() == NULL){
-            HC06.println("not a Number!");
+            HC06.println("not a number!");
             return;
           }else if(stringInput.toInt() > 24 || stringInput.toInt() < 0){
-            HC06.println("Number invalid");
+            HC06.println("number invalid");
+            return;
+        //if valid number set the hour
+          }else{
+            int hour = stringInput.toInt();
+            HC06.print("setting hour to: ");
+            HC06.println(hour);
+            RTC.setTime(hour, RTCtime.min, RTCtime.sec);
+            RTCtime = RTC.getTime();
+          }
+      //change minutes
+          delay(500);
+          HC06.println("minutes:");
+        //wait for input
+          int m = 0;
+          oldstringInput = stringInput;
+          while(oldstringInput == stringInput && m < 100){
+            Serial.println(m);
+            getInput();
+            delay(100);
+            m++;
+          }
+          Serial.println(stringInput.toInt());
+        //check if a valid number or no number
+          if(m == 100){
+            HC06.println("took to long");
+            m = 0;
+            return;
+          }else if(stringInput.toInt() == NULL){
+            HC06.println("not a number!");
+            return;
+          }else if(stringInput.toInt() > 60 || stringInput.toInt() < 0){
+            HC06.println("number invalid");
+            return;
+        //if valid number set the hour
+          }else{
+            int minutes = stringInput.toInt();
+            HC06.print("Setting minutes to: ");
+            HC06.println(minutes);
+            RTC.setTime(RTCtime.hour, minutes, RTCtime.sec);
+            RTCtime = RTC.getTime();
+          }
+      //change seconds
+          delay(500);
+          HC06.println("seconds:");
+        //wait for input
+          int s = 0;
+          oldstringInput = stringInput;
+          while(oldstringInput == stringInput && s < 100){
+            Serial.println(s);
+            getInput();
+            delay(100);
+            s++;
+          }
+          Serial.println(stringInput.toInt());
+        //check if a valid number or no number
+          if(s == 100){
+            HC06.println("took to long");
+            s = 0;
+            return;
+          }else if(stringInput.toInt() == NULL){
+            HC06.println("not a number!");
+            return;
+          }else if(stringInput.toInt() > 60 || stringInput.toInt() < 0){
+            HC06.println("number invalid");
+            return;
+        //if valid number set the hour
+          }else{
+            int seconds = stringInput.toInt();
+            HC06.print("Setting seconds to: ");
+            HC06.println(seconds);
+            RTC.setTime(RTCtime.hour, RTCtime.min, seconds);
+            RTCtime = RTC.getTime();
+          }
+      //show time you set
+          delay(500);
+          HC06.println("Changed Time to: ");
+          OutputTime(HC06);
+        }
+    //change DOW via mobile
+        if(stringInput == "setDOW"){
+          stringInput = "Marek stinkt";
+          HC06.println("dow (MONDAY = 1 etc.):");
+        //wait for input
+          int dow = 0;
+          oldstringInput = stringInput;
+          while(oldstringInput == stringInput && dow < 100){
+            Serial.println(dow);
+            getInput();
+            delay(100);
+            dow++;
+          }
+          Serial.println(stringInput.toInt());
+        //check if a valid number or no number
+          if(dow == 100){
+            HC06.println("took to long");
+            dow = 0;
+            return;
+          }else if(stringInput.toInt() == NULL){
+            HC06.println("not a number!");
+            return;
+          }else if(stringInput.toInt() > 7 || stringInput.toInt() < 0){
+            HC06.println("number invalid");
             return;
           }
+        //if valid number set the dow
+          else{
+            int date = stringInput.toInt();
+            HC06.print("setting date to: ");
+            RTC.setDOW(date);
+            RTCtime = RTC.getTime();
+          //convert day of week number to text
+            switch (RTCtime.dow)
+            {
+            case 1:
+              HC06.println("Monday");
+              break;
+            case 2:
+              HC06.println("Tuesday");
+              break;
+            case 3:
+              HC06.println("Wednesday");
+              break;
+            case 4:
+              HC06.println("Thursday");
+              break;
+            case 5:
+              HC06.println("Friday");
+              break;
+            case 6:
+              HC06.println("Saturday");
+              break;
+            case 7:
+              HC06.println("Sunday");
+              break;
+            }
+          }
         }
-    }
+    //change date via mobile
+        if(stringInput == "setDate"){
+      //change day
+          HC06.println("day:");
+        //wait for input
+          int d = 0;
+          oldstringInput = stringInput;
+          while(oldstringInput == stringInput && d < 100){
+            Serial.println(d);
+            getInput();
+            delay(100);
+            d++;
+          }
+          Serial.println(stringInput.toInt());
+        //check if a valid number or no number
+          if(d == 100){
+            HC06.println("took to long");
+            d = 0;
+            return;
+          }else if(stringInput.toInt() == NULL){
+            HC06.println("not a number!");
+            return;
+          }else if(stringInput.toInt() > 31 || stringInput.toInt() < 0){
+            HC06.println("number invalid");
+            return;
+          }
+        //if valid number set the day
+          else{
+            int day = stringInput.toInt();
+            HC06.print("setting date to: ");
+            HC06.println(day);
+            RTC.setDate(day, RTCtime.mon, RTCtime.year);
+            RTCtime = RTC.getTime();
+          }
+      //change month
+          delay(500);
+          HC06.println("month:");
+        //wait for input
+          int mon = 0;
+          oldstringInput = stringInput;
+          while(oldstringInput == stringInput && mon < 100){
+            Serial.println(mon);
+            getInput();
+            delay(100);
+            mon++;
+          }
+          Serial.println(stringInput.toInt());
+        //check if a valid number or no number
+          if(mon == 100){
+            HC06.println("took to long");
+            mon = 0;
+            return;
+          }else if(stringInput.toInt() == NULL){
+            HC06.println("not a number!");
+            return;
+          }else if(stringInput.toInt() > 12 || stringInput.toInt() < 0){
+            HC06.println("number invalid");
+            return;
+          }
+        //if valid number set the month
+          else{
+            int month = stringInput.toInt();
+            HC06.print("Setting month to: ");
+            HC06.println(month);
+            RTC.setDate(RTCtime.date, month, RTCtime.year);
+            RTCtime = RTC.getTime();
+          }
+      //change year
+          delay(500);
+          HC06.println("year:");
+        //wait for input
+          int y = 0;
+          oldstringInput = stringInput;
+          while(oldstringInput == stringInput && y < 100){
+            Serial.println(y);
+            getInput();
+            delay(100);
+            y++;
+          }
+          Serial.println(stringInput.toInt());
+        //check if a valid number or no number
+          if(y == 100){
+            HC06.println("took to long");
+            y = 0;
+            return;
+          }else if(stringInput.toInt() == NULL){
+            HC06.println("not a number!");
+            return;
+          }
+        //if valid number set the hour
+          else{
+            int year = stringInput.toInt();
+            HC06.print("Setting year to: ");
+            HC06.println(year);
+            RTC.setTime(RTCtime.hour, RTCtime.mon, year);
+            RTCtime = RTC.getTime();
+          }
+      //show time you set
+          delay(500);
+          HC06.println("Changed Date to: ");
+          OutputTime(HC06);
+      }
+    }//Ende of HC06 Commands loop
   delay(200);
 }
